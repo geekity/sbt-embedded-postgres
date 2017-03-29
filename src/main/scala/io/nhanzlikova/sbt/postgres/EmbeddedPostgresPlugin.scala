@@ -25,13 +25,10 @@ object EmbeddedPostgresPlugin extends AutoPlugin {
 
   override val projectSettings = Seq(
     postgresConnectionString := "jdbc:postgresql://localhost:25432/database",
-    postgresPort := 25432,
     postgresUsername := "admin",
     postgresPassword := "admin",
-    stopPostgresAfterTests := true,
     postgresServer := new EmbeddedPostgresServer(
       postgresConnectionString.value,
-      postgresPort.value,
       postgresUsername.value,
       postgresPassword.value
     ),
