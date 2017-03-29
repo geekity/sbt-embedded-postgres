@@ -30,7 +30,6 @@ testOnly in Test <<= (testOnly in Test).dependsOn(startPostgres)
 Configuration options (in `build.sbt`) and their defaults
 ```
 postgresConnectionString := "jdbc:postgresql://localhost:25432/database" // connection string used by tests - will create the database specified
-postgresPort := 25432 // postgres port, this will currently not be stripped from the connection string
 postgresUsername := "admin"
 postgresPassword := "admin"
 ```

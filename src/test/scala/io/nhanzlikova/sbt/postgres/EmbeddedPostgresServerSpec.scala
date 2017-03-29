@@ -7,11 +7,10 @@ import org.scalatest.{Matchers, BeforeAndAfter, FlatSpec}
 class EmbeddedPostgresServerSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
   val dbUrl = "jdbc:postgresql://localhost:25432/testdatabase"
-  val dbPort = 25432
   val username = "admin"
   val password = "admin"
 
-  val pg = new EmbeddedPostgresServer(dbUrl, dbPort, username, password)
+  val pg = new EmbeddedPostgresServer(dbUrl, username, password)
 
   before {
     pg.start()

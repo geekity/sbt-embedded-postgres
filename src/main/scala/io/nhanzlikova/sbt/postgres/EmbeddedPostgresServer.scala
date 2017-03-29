@@ -11,13 +11,11 @@ import scala.collection.JavaConverters._
 
 class EmbeddedPostgresServer(
   dbUrl: String,
-  dbPort: Int,
   username: String,
   password: String
 ) {
 
   private var process: PostgresProcess = _
-  private val DEFAULT_POSTGRES_PORT = dbPort
 
   private case class ConnectionConfig(dbUrl: String, username: String, password: String)
 
@@ -32,7 +30,7 @@ class EmbeddedPostgresServer(
   def start(): Unit = {
     val uri = URI.create(connectionConfig.dbUrl.stripPrefix("jdbc:"))
     val port = uri.getPort match {
-      case -1 => DEFAULT_POSTGRES_PORT
+      case -1 => throw new IllegalArgumentException("Invalid port in connection string")
       case p => p
     }
     val dbName = uri.getPath.stripPrefix("/")
