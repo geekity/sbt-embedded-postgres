@@ -14,7 +14,7 @@ licenses += ("MIT", url("http://opensource.org/licenses/MIT"))
 
 libraryDependencies ++= {
   Seq(
-    "ru.yandex.qatools.embed" % "postgresql-embedded" % "1.15",
+    "ru.yandex.qatools.embed" % "postgresql-embedded" % "1.23",
     "org.postgresql" % "postgresql" % "9.4.1209" % Test,
     "org.scalatest" %% "scalatest" % "3.0.1" % Test
   )

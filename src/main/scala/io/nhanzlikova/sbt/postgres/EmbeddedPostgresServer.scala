@@ -5,14 +5,15 @@ import java.net.URI
 import ru.yandex.qatools.embed.postgresql.{PostgresStarter, PostgresProcess}
 import ru.yandex.qatools.embed.postgresql.config.PostgresConfig
 import ru.yandex.qatools.embed.postgresql.config.AbstractPostgresConfig.{ Credentials, Net, Storage, Timeout }
-import ru.yandex.qatools.embed.postgresql.distribution.Version.Main.PRODUCTION
+import ru.yandex.qatools.embed.postgresql.distribution.Version
 
 import scala.collection.JavaConverters._
 
 class EmbeddedPostgresServer(
   dbUrl: String,
   username: String,
-  password: String
+  password: String,
+  pgVersion: Version.Main
 ) {
 
   private var process: PostgresProcess = _
@@ -36,15 +37,19 @@ class EmbeddedPostgresServer(
     val dbName = uri.getPath.stripPrefix("/")
 
     val config = new PostgresConfig(
-      PRODUCTION,
+      pgVersion,
       new Net(uri.getHost, port),
       new Storage(dbName),
       new Timeout(),
       new Credentials(connectionConfig.username, connectionConfig.password)
     )
 
-    // Start with DBNAME arg
-    config.getAdditionalInitDbParams.addAll(List(dbName).asJava)
+    config.getAdditionalInitDbParams().addAll(List(
+      "-E", "UTF-8",
+      "--locale=en_US.UTF-8",
+      "--lc-collate=en_US.UTF-8",
+      "--lc-ctype=en_US.UTF-8"
+    ).asJava);
 
     val runtime = PostgresStarter.getDefaultInstance()
     val exec = runtime.prepare(config)
