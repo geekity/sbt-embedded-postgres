@@ -3,6 +3,7 @@ package io.nhanzlikova.sbt.postgres
 import java.sql.{DriverManager, Connection}
 
 import org.scalatest.{Matchers, BeforeAndAfter, FlatSpec}
+import ru.yandex.qatools.embed.postgresql.distribution.Version.Main.PRODUCTION
 
 class EmbeddedPostgresServerSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
@@ -10,7 +11,7 @@ class EmbeddedPostgresServerSpec extends FlatSpec with Matchers with BeforeAndAf
   val username = "admin"
   val password = "admin"
 
-  val pg = new EmbeddedPostgresServer(dbUrl, username, password)
+  val pg = new EmbeddedPostgresServer(dbUrl, username, password, PRODUCTION)
 
   before {
     pg.start()

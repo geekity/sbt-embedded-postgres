@@ -2,6 +2,8 @@ package io.nhanzlikova.sbt.postgres
 
 import sbt._
 import sbt.Keys._
+import ru.yandex.qatools.embed.postgresql.distribution.Version
+import ru.yandex.qatools.embed.postgresql.distribution.Version.Main.PRODUCTION
 
 object EmbeddedPostgresPlugin extends AutoPlugin {
 
@@ -10,9 +12,9 @@ object EmbeddedPostgresPlugin extends AutoPlugin {
   object autoImport {
 
     val postgresConnectionString = settingKey[String]("Postgres connection string.")
-    val postgresPort = settingKey[Int]("Postgres port.")
     val postgresUsername = settingKey[String]("Postgres username.")
     val postgresPassword = settingKey[String]("Postgres password.")
+    val postgresVersion = settingKey[Version.Main]("Postgres version")
 
     val startPostgres = taskKey[Unit]("start-postgres")
     val stopPostgresAfterTests = settingKey[Boolean]("stop-postgres-after-tests")
@@ -27,10 +29,12 @@ object EmbeddedPostgresPlugin extends AutoPlugin {
     postgresConnectionString := "jdbc:postgresql://localhost:25432/database",
     postgresUsername := "admin",
     postgresPassword := "admin",
+    postgresVersion := PRODUCTION,
     postgresServer := new EmbeddedPostgresServer(
       postgresConnectionString.value,
       postgresUsername.value,
-      postgresPassword.value
+      postgresPassword.value,
+      postgresVersion.value
     ),
     startPostgres := {
       streams.value.log.info("Starting Postgres...")
