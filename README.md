@@ -9,7 +9,7 @@ Add the following to your `project/plugins.sbt` file:
 ```
 resolvers += Resolver.url("io.nhanzlikova.sbt", url("https://dl.bintray.com/geekity/sbt-plugins/"))(Resolver.ivyStylePatterns)
 
-addSbtPlugin("io.nhanzlikova.sbt" % "sbt-embedded-postgres" % "0.0.1")
+addSbtPlugin("io.nhanzlikova.sbt" % "sbt-embedded-postgres" % "1.0.0")
 ```
 
 Configuration
@@ -32,4 +32,5 @@ Configuration options (in `build.sbt`) and their defaults
 postgresConnectionString := "jdbc:postgresql://localhost:25432/database" // connection string used by tests - will create the database specified
 postgresUsername := "admin"
 postgresPassword := "admin"
+postgresVersion := PRODUCTION // IVersion from ru.yandex.qatools.embed.postgresql.distribution.Version.Main
 ```
