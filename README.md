@@ -36,6 +36,9 @@ postgresPassword := "admin"
 postgresVersion := PRODUCTION // IVersion from ru.yandex.qatools.embed.postgresql.distribution.Version.Main
 ```
 
-The default connection string is `jdbc:postgresql://localhost:25432/database`. It is accessible with the setting key `postgresConnectionString`. 
+If you want to run your build on a CI server, it is advised to let sbt chose a port at random. For this use case is an utility function defined.    
+For example: `postgresPort := getFreePort(25432 to 25532)`.  
+
+The default connection string is `jdbc:postgresql://localhost:25432/database`. It is accessible in sbt with the setting key `postgresConnectionString`. 
 
 The output from the embedded postgres can be suppressed by setting `postgresSilencer := true`.

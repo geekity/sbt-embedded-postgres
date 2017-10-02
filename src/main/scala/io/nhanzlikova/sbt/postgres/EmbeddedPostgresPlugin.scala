@@ -39,6 +39,26 @@ object EmbeddedPostgresPlugin extends AutoPlugin {
     res
   }
 
+  def isReachable(host: String, port: Int, timeout: Int = 2000): Boolean = {
+    import java.io.IOException
+    import java.net.{InetSocketAddress, Socket}
+
+    val socket = new Socket
+    try {
+      socket.connect(new InetSocketAddress(host, port), timeout)
+      true
+    } catch {
+      case _: IOException => false
+    } finally {
+      socket.close()
+    }
+  }
+
+  def getFreePort(range: IndexedSeq[Int]): Int =
+    scala.util.Random.shuffle(range).find(x => !isReachable("localhost", x)).getOrElse {
+      throw new RuntimeException(s"No free port available in given port range.")
+    }
+
   def defaultSettings = Seq(
     postgresPort := 25432,
     postgresDatabase := "database",
