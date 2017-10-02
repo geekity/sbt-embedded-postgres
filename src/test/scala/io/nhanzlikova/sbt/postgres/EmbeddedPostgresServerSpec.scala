@@ -7,11 +7,13 @@ import ru.yandex.qatools.embed.postgresql.distribution.Version.Main.PRODUCTION
 
 class EmbeddedPostgresServerSpec extends FlatSpec with Matchers with BeforeAndAfter {
 
-  val dbUrl = "jdbc:postgresql://localhost:25432/testdatabase"
+  val dbPort = 25432
+  val dbName = "testdatabase"
+  val dbUrl = s"jdbc:postgresql://localhost:${dbPort}/${dbName}"
   val username = "admin"
   val password = "admin"
 
-  val pg = new EmbeddedPostgresServer(dbUrl, username, password, PRODUCTION)
+  val pg = new EmbeddedPostgresServer("localhost", dbPort, dbName, username, password, PRODUCTION)
 
   before {
     pg.start()
