@@ -20,11 +20,11 @@ To use the postgresql in your project have your tests depend on starting the Pos
 ```
 lazy val root = (project in file(".")).enablePlugins(EmbeddedPostgresPlugin)
 
-testOptions in Test += postgresTestCleanup.value // clean up postgresql after tests
+testOptions in Test <+= postgresTestCleanup // clean up postgresql after tests
 
-test in Test := (test in Test).dependsOn(startPostgres)
+test in Test <<= (test in Test).dependsOn(startPostgres)
 
-testOnly in Test := (testOnly in Test).dependsOn(startPostgres)
+testOnly in Test <<= (testOnly in Test).dependsOn(startPostgres)
 ```
 
 Configuration options (in `build.sbt`) and their defaults
