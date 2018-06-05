@@ -12,13 +12,13 @@ object EmbeddedPostgresPlugin extends AutoPlugin {
   object autoImport {
     val postgresPort = settingKey[Int]("Postgres server port")
     val postgresDatabase = settingKey[String]("Postgres database name")
-    val postgresConnectionString = settingKey[String]("Postgres connection string.")
     val postgresUsername = settingKey[String]("Postgres username.")
     val postgresPassword = settingKey[String]("Postgres password.")
     val postgresVersion = settingKey[Version.Main]("Postgres version")
     val postgresSilencer = settingKey[Boolean]("suppress output from the embedded postgres at start and stop")
 
-    val startPostgres = taskKey[Unit]("start-postgres")
+    val postgresConnectionString = taskKey[String]("Postgres connection string.")
+    val startPostgres = taskKey[String]("start-postgres")
     val stopPostgres = taskKey[Unit]("stop-postgres")
     val postgresServer = settingKey[EmbeddedPostgresServer]("Postgres server")
     val postgresTestCleanup = TaskKey[Tests.Cleanup]("postgres-test-cleanup")
@@ -62,7 +62,7 @@ object EmbeddedPostgresPlugin extends AutoPlugin {
   def defaultSettings = Seq(
     postgresPort := 25432,
     postgresDatabase := "database",
-    postgresConnectionString := s"jdbc:postgresql://localhost:${postgresPort.value}/${postgresDatabase.value}",
+    postgresConnectionString := startPostgres.value,
     postgresUsername := "admin",
     postgresPassword := "admin",
     postgresVersion := PRODUCTION,
@@ -79,12 +79,15 @@ object EmbeddedPostgresPlugin extends AutoPlugin {
 
   def tasks = Seq(
     startPostgres := {
-      streams.value.log.info(s"Starting Postgres on ${postgresConnectionString.value} ...")
+      streams.value.log.info(s"Starting Postgres ...")
+      val server = postgresServer.value
       if (postgresSilencer.value)
-        silenceOutput(postgresServer.value.start())
+        silenceOutput(server.start())
       else
-        postgresServer.value.start()
-      streams.value.log.info("Postgres started")
+        server.start()
+      val connectionString = server.pg.getConnectionUrl.get
+      streams.value.log.info(s"Postgres started on ... $connectionString")
+      connectionString
     },
     stopPostgres := {
       streams.value.log.info("Stopping Postgres...")

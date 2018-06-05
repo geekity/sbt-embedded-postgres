@@ -7,24 +7,19 @@ Installation
 ------------
 Add the following to your `project/plugins.sbt` file:
 ```
-resolvers += Resolver.url("io.nhanzlikova.sbt", url("https://dl.bintray.com/geekity/sbt-plugins/"))(Resolver.ivyStylePatterns)
+resolvers += Resolver.bintrayRepo("geekity", "sbt-plugins")
 
-addSbtPlugin("io.nhanzlikova.sbt" % "sbt-embedded-postgres" % "1.1.0")
+addSbtPlugin("io.nhanzlikova.sbt" % "sbt-embedded-postgres" % "1.2.0")
 ```
 
 Configuration
 -------------
-The following represents an example configuration in `build.sbt` to use [sbt-embedded-postgres](https://github.com/geekity/sbt-embedded-postgres)
-
-To use the postgresql in your project have your tests depend on starting the PostgreSQL server.
+To use the embedded postgres server, just define a dependency on `startPostgres` or `postgresConnectionString`.
+This will make sbt execute `startPostgres` before starting your process. For example:
 ```
-lazy val root = (project in file(".")).enablePlugins(EmbeddedPostgresPlugin)
-
-testOptions in Test <+= postgresTestCleanup // clean up postgresql after tests
-
-test in Test <<= (test in Test).dependsOn(startPostgres)
-
-testOnly in Test <<= (testOnly in Test).dependsOn(startPostgres)
+enablePlugins(EmbeddedPostgresPlugin)
+javaOptions += s"-DDATABASE_URL=${postgresConnectionString.value}"
+postgresSilencer := true
 ```
 
 Configuration options (in `build.sbt`) and their defaults
@@ -38,7 +33,5 @@ postgresVersion := PRODUCTION // IVersion from ru.yandex.qatools.embed.postgresq
 
 If you want to run your build on a CI server, it is advised to let sbt chose a port at random. For this use case is an utility function defined.    
 For example: `postgresPort := EmbeddedPostgresPlugin.getFreePort(25432 to 25532)`.  
-
-The default connection string is `jdbc:postgresql://localhost:25432/database`. It is accessible in sbt with the setting key `postgresConnectionString`. 
 
 The output from the embedded postgres can be suppressed by setting `postgresSilencer := true`.

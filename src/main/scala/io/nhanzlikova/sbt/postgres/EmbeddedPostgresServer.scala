@@ -1,13 +1,7 @@
 package io.nhanzlikova.sbt.postgres
 
-import java.net.URI
-
-import ru.yandex.qatools.embed.postgresql.config.AbstractPostgresConfig.{Credentials, Net, Storage, Timeout}
-import ru.yandex.qatools.embed.postgresql.config.PostgresConfig
+import ru.yandex.qatools.embed.postgresql.EmbeddedPostgres
 import ru.yandex.qatools.embed.postgresql.distribution.Version
-import ru.yandex.qatools.embed.postgresql.{PostgresProcess, PostgresStarter}
-
-import scala.collection.JavaConverters._
 
 class EmbeddedPostgresServer(
   host:String,
@@ -17,34 +11,13 @@ class EmbeddedPostgresServer(
   password: String,
   pgVersion: Version.Main
 ) {
+  val pg = new EmbeddedPostgres(pgVersion)
 
-  private var process: Option[PostgresProcess] = None
+  def start(): Unit =
+    if(!pg.getProcess.isPresent)
+      pg.start(host,port, dbName,username, password)
 
-  def start(): Unit = {
-    if(process.isEmpty){
-      val config = new PostgresConfig(
-        pgVersion,
-        new Net(host, port),
-        new Storage(dbName),
-        new Timeout(),
-        new Credentials(username, password)
-      )
+  def stop(): Unit = pg.stop()
 
-      config.getAdditionalInitDbParams.addAll(List(
-        "-E", "UTF-8",
-        "--locale=en_US.UTF-8",
-        "--lc-collate=en_US.UTF-8",
-        "--lc-ctype=en_US.UTF-8"
-      ).asJava)
-
-      process = Some(PostgresStarter.getDefaultInstance.prepare(config).start)
-    }
-  }
-
-  def stop(): Unit = {
-    process.foreach(_.stop())
-    process = None
-  }
-
-  def isRunning: Boolean = process.nonEmpty
+  def isRunning: Boolean = pg.getProcess.isPresent
 }
