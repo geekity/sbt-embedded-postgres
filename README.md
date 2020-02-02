@@ -25,7 +25,7 @@ postgresSilencer := true
 Configuration options (in `build.sbt`) and their defaults
 ```
 postgresPort := 25432
-postgresDatabase := "database",
+postgresDatabase := "database"
 postgresUsername := "admin"
 postgresPassword := "admin"
 postgresVersion := PRODUCTION // IVersion from ru.yandex.qatools.embed.postgresql.distribution.Version.Main
