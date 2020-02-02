@@ -9,7 +9,7 @@ Add the following to your `project/plugins.sbt` file:
 ```
 resolvers += Resolver.bintrayRepo("geekity", "sbt-plugins")
 
-addSbtPlugin("io.nhanzlikova.sbt" % "sbt-embedded-postgres" % "1.2.0")
+addSbtPlugin("io.nhanzlikova.sbt" % "sbt-embedded-postgres" % "2.0.0")
 ```
 
 Configuration
