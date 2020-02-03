@@ -7,9 +7,9 @@ Installation
 ------------
 Add the following to your `project/plugins.sbt` file:
 ```
-resolvers += Resolver.bintrayRepo("geekity", "sbt-plugins")
+resolvers += Resolver.bintrayIvyRepo("geekity", "sbt-plugins")
 
-addSbtPlugin("io.nhanzlikova.sbt" % "sbt-embedded-postgres" % "1.2.0")
+addSbtPlugin("io.nhanzlikova.sbt" % "sbt-embedded-postgres" % "2.0.0")
 ```
 
 Configuration
@@ -25,7 +25,7 @@ postgresSilencer := true
 Configuration options (in `build.sbt`) and their defaults
 ```
 postgresPort := 25432
-postgresDatabase := "database",
+postgresDatabase := "database"
 postgresUsername := "admin"
 postgresPassword := "admin"
 postgresVersion := PRODUCTION // IVersion from ru.yandex.qatools.embed.postgresql.distribution.Version.Main
